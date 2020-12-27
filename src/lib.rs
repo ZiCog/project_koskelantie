@@ -67,7 +67,7 @@ impl Component for Model {
 
     fn view(&self) -> Html {
         html! {
-            <div style="background-color:#0E540F; text-align:center; height=4000;" >
+            <div style="text-align:center; height=4000;" >
                 <h1>{"Project Koskelantie"}</h1>
                 <img src=self.images[self.image_index] alt="Image of project progress." height="768" onclick=self.link.callback(|_| Msg::Next)/>
                 <p>{ self.images[self.image_index].clone() }</p>
