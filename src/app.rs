@@ -1,9 +1,12 @@
-#![recursion_limit="1024"]
+//#![recursion_limit="1024"]
 
-use wasm_bindgen::prelude::*;
+//use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 use yew::web_sys;
 use yew::services::ConsoleService;
+
+use crate::components::button::Button;
+
 
 
 // Our root component
@@ -150,13 +153,10 @@ impl Component for App {
                 <img src=self.images[self.image_index] alt="Image of project progress." height="768" onclick=self.link.callback(|_| Msg::Next)/>
                 <p>{ self.images[self.image_index].clone() }</p>
                 <div>
-                    <button onclick=self.link.callback(|_| Msg::Prev)>
-                        {"Prev"}
-                    </button>
+                    {"// Using custon Button component here as an experiment in component creation"}
+                    <Button onsignal=self.link.callback(|_| Msg::Prev) title="Prev" />
                     {" "}
-                    <button onclick=self.link.callback(|_| Msg::Next)>
-                        {"Next"}
-                    </button>
+                    <Button onsignal=self.link.callback(|_| Msg::Next) title="Next" />
                 </div>
             </div>
         }

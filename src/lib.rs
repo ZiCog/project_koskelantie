@@ -2,11 +2,12 @@
 
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
-use yew::web_sys;
-use yew::services::ConsoleService;
+//use yew::web_sys;
+//use yew::services::ConsoleService;
 
 
 mod app;
+mod components;
 
 #[wasm_bindgen(start)]
 pub fn run_app() -> Result<(), JsValue> {
