@@ -6,6 +6,7 @@ use yew::web_sys;
 use yew::services::ConsoleService;
 
 use crate::components::button::Button;
+use crate::components::fetcher::Fetcher;
 
 
 
@@ -148,15 +149,30 @@ impl Component for App {
 
     fn view(&self) -> Html {
         html! {
-            <div style="text-align:center; height=4000;" >
-                <h1>{"Project Koskelantie"}</h1>
-                <img src=self.images[self.image_index] alt="Image of project progress." height="768" onclick=self.link.callback(|_| Msg::Next)/>
-                <p>{ self.images[self.image_index].clone() }</p>
-                <div>
-                    {"// Using custon Button component here as an experiment in component creation"}
-                    <Button onsignal=self.link.callback(|_| Msg::Prev) title="Prev" />
-                    {" "}
-                    <Button onsignal=self.link.callback(|_| Msg::Next) title="Next" />
+            <div>
+                <div class="flex one center">
+                    <div class="third-1000">
+
+                        <article class="card">
+                            <header>
+                                <h1>{"Project Koskelantie"}</h1>
+                            </header>
+                            <img src=self.images[self.image_index] alt="Image of project progress." onclick=self.link.callback(|_| Msg::Next)/>
+                                <footer>
+                                    <p>{ self.images[self.image_index].clone() }</p>
+                                    <div class="flex five">
+                                        <div></div>
+                                        <Button onsignal=self.link.callback(|_| Msg::Prev) title="Prev" />
+                                        <div></div>
+                                        <Button onsignal=self.link.callback(|_| Msg::Next) title="Next" />
+                                        <Fetcher onsignal=self.link.callback(|_| Msg::Next) title="Fetch" />
+                                        <div></div>
+                                    </div>
+                                </footer>
+                        </article>
+
+
+                    </div>
                 </div>
             </div>
         }
