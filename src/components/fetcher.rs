@@ -23,6 +23,7 @@ pub enum Msg {
 #[derive(Clone, Deserialize, Debug)]
 pub struct DataFromFile {
     value: u32,
+    file: String,
 }
 // Define a button component
 pub struct Fetcher {
@@ -32,7 +33,7 @@ pub struct Fetcher {
     fetching: bool,
     data: Option<DataFromFile>,
     error: Option<String>,
-    fetch_task: Option<FetchTask>,    
+    fetch_task: Option<FetchTask>,
 }
 
 // Properties passed in my parent component.
@@ -48,7 +49,10 @@ impl Fetcher {
     fn view_data(&self) -> Html {
         if let Some(data_from_file) = &self.data {
             html! {
-                <p>{ data_from_file.value }</p>
+                <>
+                    <p>{ data_from_file.value }</p>
+                    <p>{ data_from_file.file.clone() }</p>
+                </>
             }
         } else {
             html! {
@@ -57,7 +61,6 @@ impl Fetcher {
         }
     }
 }
-
 
 // Implementation of button component.
 impl Component for Fetcher {
@@ -86,13 +89,23 @@ impl Component for Fetcher {
                 // Numbered steps from: https://yew.rs/docs/en/next/concepts/services/fetch
                 self.fetching = true;
                 // 1. Build the request
-                let request = Request::get("/data.json").body(Nothing).expect("Could not build request.");
+                let request = Request::get("/data.json")
+                    .body(Nothing)
+                    .expect("Could not build request.");
 
                 // 2. Construct a callback
-                let callback = self.link.callback(|response: Response<Json<Result<DataFromFile, anyhow::Error>>>| {
-                    let Json(data) = response.into_body();
-                    Msg::FetchReady(data)
-                });
+                let callback = self.link.callback(
+                    |response: Response<Json<Result<DataFromFile, anyhow::Error>>>| {
+                        // Consume the response, returning just the body.
+                        let body = response.into_body();
+
+                        // Converts bodies JSON string to a data (lazy). 
+                        let Json(data) = body;
+
+                        // Return a fetch ready message with received data.
+                        Msg::FetchReady(data)
+                    },
+                );
 
                 // 3. Pass the request and callback to the fetch service.
                 let task = FetchService::fetch(request, callback).expect("failed to start request");
@@ -105,7 +118,7 @@ impl Component for Fetcher {
                 true
             }
             Msg::FetchReady(response) => {
-                // Indicate we are no longer fetching 
+                // Indicate we are no longer fetching
                 self.fetching = false;
 
                 // There is no fetch_task running anymore.
@@ -115,10 +128,8 @@ impl Component for Fetcher {
                     Ok(location) => {
                         self.data = Some(location);
                     }
-                    Err(error) => {
-                        self.error = Some(error.to_string())
-                    }
-                }                
+                    Err(error) => self.error = Some(error.to_string()),
+                }
 
                 // We want to redraw so that the page displays a 'fetching...' message to the user
                 // so return 'true'

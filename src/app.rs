@@ -2,13 +2,11 @@
 
 //use wasm_bindgen::prelude::*;
 use yew::prelude::*;
-use yew::web_sys;
 use yew::services::ConsoleService;
+use yew::web_sys;
 
 use crate::components::button::Button;
 use crate::components::fetcher::Fetcher;
-
-
 
 // Our root component
 pub struct App {
@@ -118,8 +116,8 @@ impl Component for App {
         match msg {
             Msg::Next => {
                 let last = self.images.len() - 1;
-                    self.image_index = (self.image_index + 1) % last;
-                    ConsoleService::error(&format!("Image index: {}", self.image_index));
+                self.image_index = (self.image_index + 1) % last;
+                ConsoleService::error(&format!("Image index: {}", self.image_index));
             }
             Msg::Prev => {
                 if self.image_index == 0 {
@@ -178,5 +176,3 @@ impl Component for App {
         }
     }
 }
-
-

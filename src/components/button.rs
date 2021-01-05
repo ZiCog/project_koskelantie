@@ -7,7 +7,6 @@ pub struct Button {
     onsignal: Callback<()>,
 }
 
-
 pub enum Msg {
     Clicked,
 }
