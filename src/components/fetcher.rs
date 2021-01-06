@@ -23,7 +23,7 @@ pub enum Msg {
 #[derive(Clone, Deserialize, Debug)]
 pub struct DataFromFile {
     value: u32,
-    file: String,
+    files: Vec<String>,
 }
 // Define a button component
 pub struct Fetcher {
@@ -46,17 +46,30 @@ pub struct Props {
 
 // Implementation of some methods on our fetcher.
 impl Fetcher {
+
     fn view_data(&self) -> Html {
         if let Some(data_from_file) = &self.data {
+            let files: Vec<Html> = data_from_file
+                .files
+                .iter()
+                .map(|file: &String| {
+                    html!{
+                        <div>
+                            {file}
+                        </div>
+                    }
+                })
+                .collect ();
             html! {
                 <>
                     <p>{ data_from_file.value }</p>
-                    <p>{ data_from_file.file.clone() }</p>
+                    <p>{ format!("There are {} files", data_from_file.files.len()) }</p>
+                    <p>{ files }</p>
                 </>
             }
         } else {
             html! {
-                <p>{ "Data hasn't fetched yet." }</p>
+                <p>{ "Data hasn't fetched yet...." }</p>
             }
         }
     }
@@ -108,6 +121,7 @@ impl Component for Fetcher {
                 );
 
                 // 3. Pass the request and callback to the fetch service.
+                println!("Fetching...");
                 let task = FetchService::fetch(request, callback).expect("failed to start request");
 
                 // 4. Store the task so it isn't canceled immediately
@@ -149,12 +163,6 @@ impl Component for Fetcher {
             <div>
                     <button onclick=self.link.callback(|_| Msg::FetchData(Format::Json, false))>
                         { "Fetch Data" }
-                    </button>
-                    <button onclick=self.link.callback(|_| Msg::FetchData(Format::Json, true))>
-                        { "Fetch Data [binary]" }
-                    </button>
-                    <button onclick=self.link.callback(|_| Msg::FetchData(Format::Toml, false))>
-                        { "Fetch Data [toml]" }
                     </button>
                     { self.view_data() }
             </div>

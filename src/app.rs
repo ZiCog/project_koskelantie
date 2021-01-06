@@ -163,11 +163,11 @@ impl Component for App {
                                         <Button onsignal=self.link.callback(|_| Msg::Prev) title="Prev" />
                                         <div></div>
                                         <Button onsignal=self.link.callback(|_| Msg::Next) title="Next" />
-                                        <Fetcher onsignal=self.link.callback(|_| Msg::Next) title="Fetch" />
                                         <div></div>
                                     </div>
                                 </footer>
                         </article>
+                        <Fetcher onsignal=self.link.callback(|_| Msg::Next) title="Fetch" />
 
 
                     </div>
